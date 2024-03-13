@@ -36,11 +36,26 @@ namespace JsonSerializeDeserialize
             string json = JsonSerializer.Serialize(person);
             Console.WriteLine(json);
 
-            // JSON
+            Person deserializedPerson = JsonSerializer.Deserialize<Person>(json); // works because it's right JSON
+            Console.WriteLine(deserializedPerson);
+
+            // Correct JSON
             // {"Name":"Serge Klokov","Age":40,"DOB":"1999-10-23T00:00:00","Kids":[{"Name":"Tristan","Age":13},{"Name":"McKayla","Age":11}]}
 
-            Person deserializedPerson = JsonSerializer.Deserialize<Person>(json);
-            Console.WriteLine(deserializedPerson);
+            // I made Age as string "40" instead of 40. It cause an error.
+            string jsonWithIncorrectType = "{\"Name\":\"Serge Klokov\",\"Age\":\"40\",\"DOB\":\"1999-10-23T00:00:00\",\"Kids\":[{\"Name\":\"Tristan\",\"Age\":13},{\"Name\":\"McKayla\",\"Age\":11}]}";
+
+            try
+            {
+                Person deserializedPerson2 = JsonSerializer.Deserialize<Person>(jsonWithIncorrectType);  
+                Console.WriteLine(deserializedPerson2);
+            }
+            catch (Exception ex)
+            {
+                // System.Text.Json.JsonException: 'The JSON value could not be converted to System.Int32. Path: $.Age | LineNumber: 0 | BytePositionInLine: 33.'
+                Console.Write(ex);
+            }
+
 
             Console.WriteLine("Please press any key");
             Console.ReadKey();
